@@ -2,8 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>融圈行动：淮南的绿色蝶变 (深度版)</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>融圈行动：淮南的绿色蝶变</title>
     <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
     <style>
         :root {
@@ -14,212 +14,128 @@
             --btn-upgrade: #e74c3c;
         }
         body { 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
             background-color: var(--bg-color); color: var(--text-color);
-            transition: all 1s ease; margin: 0; padding: 20px; min-height: 100vh;
+            transition: all 1s ease; margin: 0; padding: 10px; min-height: 100vh;
             box-sizing: border-box;
         }
         
-        /* 篇章主题变量 */
         .chapter-1 { --bg-color: #2c3e50; --text-color: #ecf0f1; --panel-bg: rgba(0,0,0,0.4); --btn-action: #5a6667; --btn-upgrade: #c0392b; }
         .chapter-2 { --bg-color: #e67e22; --text-color: #2c3e50; --panel-bg: rgba(255,255,255,0.8); --btn-action: #d35400; --btn-upgrade: #2980b9; }
         .chapter-3 { --bg-color: #a3e4d7; --text-color: #0b5345; --panel-bg: rgba(255,255,255,0.85); --btn-action: #16a085; --btn-upgrade: #27ae60; }
 
         .container { 
             max-width: 900px; margin: 0 auto; background: var(--panel-bg); 
-            padding: 30px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
+            padding: 15px; border-radius: 12px; box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3); 
             backdrop-filter: blur(10px); transition: all 1s ease;
         }
 
-        h1, h3 { text-align: center; margin-top: 0; }
-        .header-info { text-align: center; font-size: 1.1em; margin-bottom: 20px; font-weight: bold; color: #f1c40f;}
+        h1 { text-align: center; font-size: 1.4em; margin: 10px 0; }
+        h3 { text-align: center; font-size: 1.1em; margin-bottom: 5px; }
+        .header-info { text-align: center; font-size: 0.9em; margin-bottom: 15px; color: #f1c40f;}
         .chapter-2 .header-info, .chapter-3 .header-info { color: #d35400; }
 
-        /* 数据仪表盘 */
+        /* 数据仪表盘：手机上改为2列 */
         .stats-grid { 
-            display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-bottom: 30px;
+            display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px;
         }
         .stat-card { 
-            background: rgba(0,0,0,0.2); padding: 15px; border-radius: 8px; text-align: center;
+            background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; text-align: center;
         }
-        .chapter-2 .stat-card, .chapter-3 .stat-card { background: rgba(255,255,255,0.6); box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
-        .stat-value { font-size: 1.8em; font-weight: bold; margin: 5px 0; }
+        .chapter-2 .stat-card, .chapter-3 .stat-card { background: rgba(255,255,255,0.6); }
+        .stat-value { font-size: 1.4em; font-weight: bold; margin: 3px 0; }
         
-        /* 进度条 */
-        progress { width: 100%; height: 12px; border-radius: 6px; }
-        progress::-webkit-progress-bar { background-color: #ecf0f1; border-radius: 6px; }
-        progress::-webkit-progress-value { border-radius: 6px; }
-        .prog-eco::-webkit-progress-value { background-color: #2ecc71; }
-        .prog-sup::-webkit-progress-value { background-color: #e74c3c; }
-        .prog-tech::-webkit-progress-value { background-color: #3498db; }
+        progress { width: 100%; height: 8px; border-radius: 4px; }
 
-        /* 游戏区域布局 */
-        .game-area { display: flex; gap: 20px; }
+        /* 游戏区域布局：移动端核心改动 */
+        .game-area { display: flex; flex-direction: column; gap: 20px; }
+        @media (min-width: 768px) {
+            .game-area { flex-direction: row; }
+            h1 { font-size: 2em; }
+            .container { padding: 30px; }
+            .stats-grid { grid-template-columns: repeat(4, 1fr); }
+        }
+
         .controls { flex: 1; }
-        .logs-panel { flex: 1; display: flex; flex-direction: column; }
+        .logs-panel { flex: 1; }
 
-        /* 按钮系统 */
         .btn { 
-            display: block; width: 100%; padding: 14px; margin-bottom: 12px; border: none; 
-            border-radius: 8px; font-size: 1.05em; cursor: pointer; transition: 0.2s; font-weight: bold;
+            display: block; width: 100%; padding: 16px 10px; margin-bottom: 12px; border: none; 
+            border-radius: 8px; font-size: 0.95em; cursor: pointer; transition: 0.2s; font-weight: bold;
+            line-height: 1.4; box-sizing: border-box;
         }
-        .btn:hover:not(:disabled) { filter: brightness(1.1); transform: translateY(-2px); }
-        .btn:active:not(:disabled) { transform: translateY(0); }
-        .btn:disabled { opacity: 0.5; cursor: not-allowed; filter: grayscale(50%); }
-
-        .btn-action { background-color: var(--btn-action); color: white; }
         .btn-upgrade { background-color: var(--btn-upgrade); color: white; border: 2px dashed rgba(255,255,255,0.5); }
+        .btn-action { background-color: var(--btn-action); color: white; }
         
-        /* 日志窗口 */
         .logs { 
-            flex-grow: 1; height: 400px; overflow-y: auto; background: rgba(0,0,0,0.7); 
-            color: #ecf0f1; padding: 15px; border-radius: 8px; font-family: 'Courier New', monospace; 
+            height: 300px; overflow-y: auto; background: rgba(0,0,0,0.7); 
+            color: #ecf0f1; padding: 12px; border-radius: 8px; font-family: monospace; font-size: 0.85em;
         }
-        .chapter-2 .logs, .chapter-3 .logs { background: #2c3e50; color: #ecf0f1; }
-        .log-item { margin-bottom: 10px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 5px; font-size: 0.9em; line-height: 1.4; }
-        .log-warn { color: #ff7675; }
-        .log-event { color: #f1c40f; font-weight: bold; }
-        .log-success { color: #55efc4; font-weight: bold; }
 
-        /* 规则弹窗样式 */
-        .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.85); display: flex; align-items: center; justify-content: center;
-            z-index: 1000; backdrop-filter: blur(5px);
-        }
+        /* 规则弹窗适配 */
         .modal-content {
-            background: #fff; color: #333; width: 90%; max-width: 650px; padding: 40px;
-            border-radius: 15px; position: relative; max-height: 80vh; overflow-y: auto;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            background: #fff; color: #333; width: 85%; max-width: 500px; padding: 25px;
+            border-radius: 15px; max-height: 85vh; overflow-y: auto;
         }
-        .modal-content h2 { color: #2c3e50; border-bottom: 2px solid #e67e22; padding-bottom: 10px; }
-        .modal-content h4 { margin: 15px 0 5px; color: #d35400; }
-        .modal-content ul { padding-left: 20px; font-size: 0.95em; line-height: 1.6; }
-        .modal-content li { margin-bottom: 8px; }
-        .btn-close {
-            background: #e67e22; color: white; padding: 12px 30px; border: none;
-            border-radius: 25px; font-size: 1.1em; cursor: pointer; display: block;
-            margin: 30px auto 0; font-weight: bold; transition: 0.2s;
-        }
-        .btn-close:hover { background: #d35400; transform: scale(1.05); }
+        .modal-content h2 { font-size: 1.3em; }
+        .modal-content ul { font-size: 0.9em; padding-left: 15px; }
     </style>
 </head>
 <body id="app" :class="'chapter-' + chapter">
 
-    <div v-if="showRules" class="modal-overlay">
+    <div v-if="showRules" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.85); display: flex; align-items: center; justify-content: center; z-index: 1000;">
         <div class="modal-content">
-            <h2>📜 执政官手册：城市蝶变指引</h2>
-            <p>欢迎来到淮南，协调官。您的目标是通过科学决策，将这座传统煤城转型为长三角的绿色高质量发展标杆。</p>
-            
-            <h4>核心指标：</h4>
+            <h2>📜 执政官手册</h2>
+            <p>通过科学决策，带领淮南实现绿色高质量发展。</p>
             <ul>
-                <li><strong>💰 发展资金：</strong> 执政的基础。可以通过贸易获得，用于基建与技术研发。</li>
-                <li><strong>🌱 生态指数：</strong> 警戒线为10。低于此数值将触发高额环保罚款。</li>
-                <li><strong>❤️ 民心向背：</strong> 警戒线为10。民心过低将引发社会动荡，导致执政危机。</li>
-                <li><strong>🔬 科技储备：</strong> 产业升级的关键门槛，通过投资研发积累。</li>
+                <li><strong>💰 资金：</strong> 执政的基础。</li>
+                <li><strong>🌱 生态：</strong> 警戒线10，过低会被罚款。</li>
+                <li><strong>❤️ 民心：</strong> 警戒线10，代表执政稳定。</li>
+                <li><strong>🔬 科技：</strong> 产业升级的关键。</li>
             </ul>
-
-            <h4>执政目标：</h4>
-            <ul>
-                <li><strong>第一篇章：</strong> 完成原始积累，通过基建打通长三角物流大动脉。</li>
-                <li><strong>第二篇章：</strong> 承接产业转移，在“飞地经济”中积累核心转型技术。</li>
-                <li><strong>第三篇章：</strong> 建设水面光伏巨阵，实现“绿电入沪”与“智力回流”。</li>
-            </ul>
-
-            <button class="btn-close" @click="showRules = false">我知道了，开始执政</button>
+            <button style="background: #e67e22; color: white; padding: 12px 0; border: none; border-radius: 25px; width: 100%; font-weight: bold;" @click="showRules = false">进入执政</button>
         </div>
     </div>
 
     <div class="container">
-        <h1>融圈行动：淮南的绿色蝶变</h1>
+        <h1>融圈行动</h1>
         <h3>{{ chapterName }}</h3>
-        <div class="header-info">📅 第 {{ year }} 年 {{ month }} 月 | 总回合数: {{ turns }}</div>
+        <div class="header-info">📅 第 {{ year }} 年 {{ month }} 月</div>
 
         <div class="stats-grid">
-            <div class="stat-card">
-                <div>💰 发展资金</div>
-                <div class="stat-value">{{ funds }}</div>
-                <div style="font-size: 0.8em; color: gray;">(万)</div>
-            </div>
-            <div class="stat-card">
-                <div>🌱 生态指数</div>
-                <div class="stat-value">{{ ecology }}</div>
-                <progress class="prog-eco" :value="ecology" max="100"></progress>
-            </div>
-            <div class="stat-card">
-                <div>❤️ 民心向背</div>
-                <div class="stat-value">{{ support }}</div>
-                <progress class="prog-sup" :value="support" max="100"></progress>
-            </div>
-            <div class="stat-card">
-                <div>🔬 科技储备</div>
-                <div class="stat-value">{{ tech }}</div>
-                <progress class="prog-tech" :value="tech" max="200"></progress>
-            </div>
+            <div class="stat-card"><div>💰 资金</div><div class="stat-value">{{ funds }}</div></div>
+            <div class="stat-card"><div>🌱 生态</div><div class="stat-value">{{ ecology }}</div><progress :value="ecology" max="100"></progress></div>
+            <div class="stat-card"><div>❤️ 民心</div><div class="stat-value">{{ support }}</div><progress :value="support" max="100"></progress></div>
+            <div class="stat-card"><div>🔬 科技</div><div class="stat-value">{{ tech }}</div><progress :value="tech" max="200"></progress></div>
         </div>
 
         <div class="game-area">
             <div class="controls">
                 <template v-if="chapter === 1">
-                    <button class="btn btn-action" @click="doAction(300, -12, 0, 0, '⛏️ 粗放开采原煤外销 (资金+300, 生态-12)')">
-                        ⛏️ 粗放开采原煤外销 (资金+300, 生态-12)
-                    </button>
-                    <button class="btn btn-action" :disabled="funds < 500" @click="doAction(-500, 20, 5, 0, '🌳 治理采煤沉陷区 (资金-500, 生态+20, 民心+5)')">
-                        🌳 治理采煤沉陷区 (资金-500, 生态+20, 民心+5)
-                    </button>
-                    <button class="btn btn-action" :disabled="funds < 800" @click="doAction(-800, -5, 0, 15, '🏭 引进燃煤发电技术 (资金-800, 生态-5, 科技+15)')">
-                        🏭 引进燃煤发电技术 (资金-800, 生态-5, 科技+15)
-                    </button>
-                    <button class="btn btn-action" @click="doAction(50, 0, 10, 0, '🍲 举办八公山豆腐文化节 (资金+50, 民心+10)')">
-                        🍲 举办豆腐文化节 (资金+50, 民心+10)
-                    </button>
-                    <button class="btn btn-upgrade" :disabled="funds < 1500 || tech < 30 || support < 40" @click="upgradeChapter(2)">
-                        🚆 贯通商合杭高铁与江淮运河<br>(消耗: 1500资金 | 需门槛: 30科技, 40民心) ➔ 进入第二篇章
-                    </button>
+                    <button class="btn btn-action" @click="doAction(300, -12, 0, 0, '⛏️ 粗放开采原煤 (资金+300, 生态-12)')">⛏️ 粗放开采原煤 (资金+300, 生态-12)</button>
+                    <button class="btn btn-action" :disabled="funds < 500" @click="doAction(-500, 20, 5, 0, '🌳 治理沉陷区 (资金-500, 生态+20)')">🌳 治理沉陷区 (资金-500, 生态+20)</button>
+                    <button class="btn btn-action" @click="doAction(50, 0, 10, 0, '🍲 举办豆腐文化节 (资金+50, 民心+10)')">🍲 举办豆腐文化节 (资金+50, 民心+10)</button>
+                    <button class="btn btn-upgrade" :disabled="funds < 1500 || tech < 30 || support < 40" @click="upgradeChapter(2)">🚆 贯通商合杭高铁 (需1500资金) ➔ 第二篇章</button>
                 </template>
 
                 <template v-if="chapter === 2">
-                    <button class="btn btn-action" @click="doAction(800, -15, -5, 0, '🏭 承接长三角落后产能 (资金+800, 生态-15, 民心-5)')">
-                        🏭 承接落后产能【短期红利】(资金+800, 生态-15, 民心-5)
-                    </button>
-                    <button class="btn btn-action" :disabled="funds < 1000" @click="doAction(-1000, -5, 10, 25, '🔋 布局新能源汽车产业链 (资金-1000, 生态-5, 民心+10, 科技+25)')">
-                        🔋 布局新能源汽车产业链 (资金-1000, 生态-5, 民心+10, 科技+25)
-                    </button>
-                    <button class="btn btn-action" :disabled="funds < 500" @click="doAction(-500, 0, 15, 10, '🎓 长三角名校合作办学 (资金-500, 民心+15, 科技+10)')">
-                        🎓 产学研合作办学 (资金-500, 民心+15, 科技+10)
-                    </button>
-                    <button class="btn btn-action" @click="doAction(200, 5, 5, 0, '🌾 推广淮南牛肉汤等特色农产 (资金+200, 生态+5, 民心+5)')">
-                        🌾 特色农产品供沪 (资金+200, 生态+5, 民心+5)
-                    </button>
-                    <button class="btn btn-upgrade" :disabled="funds < 6000 || tech < 100 || ecology < 50" @click="upgradeChapter(3)">
-                        ☀️ 攻坚水面光伏与特高压技术<br>(消耗: 6000资金 | 需门槛: 50生态, 100科技) ➔ 进入第三篇章
-                    </button>
+                    <button class="btn btn-action" @click="doAction(800, -15, -5, 0, '🏭 承接落后产能 (资金+800, 生态-15)')">🏭 承接落后产能 (资金+800, 生态-15)</button>
+                    <button class="btn btn-action" :disabled="funds < 1000" @click="doAction(-1000, -5, 10, 25, '🔋 布局新能车链 (资金-1000, 科技+25)')">🔋 布局新能车链 (资金-1000, 科技+25)</button>
+                    <button class="btn btn-action" @click="doAction(200, 5, 5, 0, '🌾 特色农产供沪 (资金+200, 生态+5)')">🌾 特色农产供沪 (资金+200, 生态+5)</button>
+                    <button class="btn btn-upgrade" :disabled="funds < 6000 || tech < 100 || ecology < 50" @click="upgradeChapter(3)">☀️ 攻坚光伏技术 (需6000资金) ➔ 第三篇章</button>
                 </template>
 
                 <template v-if="chapter === 3">
-                    <button class="btn btn-action" :disabled="funds < 1500" @click="doAction(-1500, 25, 10, 20, '🌊 建设水上漂浮式光伏巨阵 (资金-1500, 生态+25, 民心+10, 科技+20)')">
-                        🌊 建设水上漂浮式光伏巨阵 (资金-1500, 生态+25, 民心+10, 科技+20)
-                    </button>
-                    <button class="btn btn-action" :disabled="ecology < 60 || tech < 120" @click="doAction(2500, -5, 15, 0, '⚡ 皖电东送：特高压绿电直供上海 (资金+2500, 生态-5, 民心+15)')">
-                        ⚡ 皖电东送：特高压绿电入沪 (资金+2500, 生态-5, 民心+15 | 需门槛: 60生态, 120科技)
-                    </button>
-                    <button class="btn btn-action" :disabled="funds < 2000" @click="doAction(-2000, 10, 10, 40, '🚀 落地深空探测大科学装置 (资金-2000, 生态+10, 民心+10, 科技+40)')">
-                        🚀 落地深空探测实验室 (资金-2000, 生态+10, 民心+10, 科技+40)
-                    </button>
-                    <button class="btn btn-action" @click="doAction(500, 15, 10, 0, '🏕️ 发展八公山零碳生态旅游 (资金+500, 生态+15, 民心+10)')">
-                        🏕️ 发展零碳生态旅游 (资金+500, 生态+15, 民心+10)
-                    </button>
-                    <button class="btn btn-upgrade" v-if="ecology >= 100 && support >= 100 && tech >= 200 && funds >= 10000" @click="winGame">
-                        🏆 达成“长三角高质量发展标杆”<br>(需全部指标拉满且资金破万) ➔ 游戏通关
-                    </button>
+                    <button class="btn btn-action" :disabled="funds < 1500" @click="doAction(-1500, 25, 10, 20, '🌊 建设水面光伏 (资金-1500, 生态+25)')">🌊 建设水面光伏 (资金-1500, 生态+25)</button>
+                    <button class="btn btn-action" :disabled="ecology < 60 || tech < 120" @click="doAction(2500, -5, 15, 0, '⚡ 特高压绿电入沪 (资金+2500, 民心+15)')">⚡ 特高压绿电入沪 (资金+2500, 民心+15)</button>
+                    <button class="btn btn-upgrade" v-if="ecology >= 100 && support >= 100 && tech >= 200 && funds >= 10000" @click="winGame">🏆 达成高质量发展标杆 ➔ 通关</button>
                 </template>
             </div>
 
             <div class="logs-panel">
                 <div class="logs" id="logContainer">
-                    <div v-for="(log, index) in logs" :key="index" 
-                         class="log-item" :class="{'log-warn': log.type==='warn', 'log-event': log.type==='event', 'log-success': log.type==='success'}">
-                        <span style="opacity:0.7">[{{ log.time }}]</span> {{ log.text }}
+                    <div v-for="(log, index) in logs" :key="index" style="margin-bottom:8px; border-bottom:1px solid rgba(255,255,255,0.1); padding-bottom:4px;">
+                        <span style="opacity:0.6">[{{ log.time }}]</span> {{ log.text }}
                     </div>
                 </div>
             </div>
@@ -228,148 +144,36 @@
 
     <script>
         const { createApp, ref, computed, nextTick } = Vue;
-
         createApp({
             setup() {
-                // 核心控制
-                const showRules = ref(true); // 初始显示规则
+                const showRules = ref(true);
                 const chapter = ref(1);
-                const year = ref(2010);
-                const month = ref(1);
-                const turns = ref(0);
-                
-                const funds = ref(1000);
-                const ecology = ref(40);
-                const support = ref(50);
-                const tech = ref(0);
-                
+                const year = ref(2010), month = ref(1);
+                const funds = ref(1000), ecology = ref(40), support = ref(50), tech = ref(0);
                 const logs = ref([]);
-
-                const chapterNames = {
-                    1: "第一篇章：黑金时代的余晖 (资源枯竭期)",
-                    2: "第二篇章：大动脉的跳动 (产业转型期)",
-                    3: "第三篇章：绿水青山的馈赠 (绿色高质量发展)"
-                };
+                const chapterNames = {1: "第一篇章：黑金时代的余晖", 2: "第二篇章：大动脉的跳动", 3: "第三篇章：绿水青山的馈赠"};
                 const chapterName = computed(() => chapterNames[chapter.value]);
 
-                const scrollToBottom = async () => {
-                    await nextTick();
-                    const container = document.getElementById('logContainer');
-                    if (container) container.scrollTop = container.scrollHeight;
+                const addLog = (text) => {
+                    logs.value.push({ time: `${year.value}年${month.value}月`, text });
+                    nextTick(() => { const c = document.getElementById('logContainer'); if(c) c.scrollTop = c.scrollHeight; });
                 };
 
-                const addLog = (text, type = 'normal') => {
-                    const time = `${year.value}年${month.value}月`;
-                    logs.value.push({ time, text, type });
-                    scrollToBottom();
-                };
-
-                const clampLimits = () => {
-                    if (ecology.value > 100) ecology.value = 100;
-                    if (ecology.value < 0) ecology.value = 0;
-                    if (support.value > 100) support.value = 100;
-                    if (support.value < 0) support.value = 0;
-                    if (tech.value > 200) tech.value = 200;
-                };
-
-                const advanceTime = () => {
-                    turns.value++;
-                    month.value++;
-                    if (month.value > 12) {
-                        month.value = 1;
-                        year.value++;
-                    }
-
-                    if (ecology.value <= 10) {
-                        funds.value = Math.max(0, funds.value - 1000);
-                        support.value -= 10;
-                        ecology.value = 20;
-                        addLog("⚠️【中央环保督查】生态环境极度恶化！工厂被强制停产整顿，罚款1000资金，民心大跌！", "warn");
-                        return;
-                    }
-                    if (support.value <= 10) {
-                        funds.value = Math.max(0, funds.value - 800);
-                        support.value = 30;
-                        addLog("⚠️【群体性事件】失业率与污染引发居民抗议，市政紧急维稳支出800资金！", "warn");
-                        return;
-                    }
-
-                    if (Math.random() < 0.15) {
-                        triggerRandomEvent();
-                    }
-                };
-
-                const triggerRandomEvent = () => {
-                    const r = Math.random();
-                    if (chapter.value === 1) {
-                        if (r < 0.5) {
-                            funds.value -= 300;
-                            addLog("🔔【突发】全国煤炭产能过剩，煤价大幅下跌，财政锐减300万！", "event");
-                        } else {
-                            support.value -= 5;
-                            addLog("🔔【突发】老矿区发生轻微塌陷，引发群众担忧，民心下降5。", "event");
-                        }
-                    } else if (chapter.value === 2) {
-                        if (r < 0.33) {
-                            funds.value += 800;
-                            addLog("🔔【机遇】长三角企业家考察团来访，签下800万意向投资！", "event");
-                        } else if (r < 0.66) {
-                            tech.value += 10;
-                            addLog("🔔【机遇】合肥综合性国家科学中心辐射效应，科研进度自动提升10点。", "event");
-                        } else {
-                            support.value -= 10;
-                            tech.value -= 5;
-                            addLog("🔔【危机】虹吸效应！本地优秀工程师跳槽至苏浙沪，科技流失，民心受挫。", "event");
-                        }
-                    } else if (chapter.value === 3) {
-                        if (r < 0.5) {
-                            funds.value += 1500;
-                            addLog("🔔【机遇】荣获“国家级绿色转型示范区”，中央财政下拨1500万专项奖补！", "event");
-                        } else {
-                            support.value += 10;
-                            ecology.value += 5;
-                            addLog("🔔【机遇】八公山景区爆火出圈，吸引大量江浙沪游客，民心与生态口碑双丰收！", "event");
-                        }
-                    }
-                    clampLimits();
-                };
-
-                const doAction = (f, e, s, t, logText) => {
-                    funds.value += f;
-                    ecology.value += e;
-                    support.value += s;
-                    tech.value += t;
-                    clampLimits();
-                    addLog(logText);
-                    advanceTime();
+                const doAction = (f, e, s, t, log) => {
+                    funds.value += f; ecology.value += e; support.value += s; tech.value += t;
+                    if(ecology.value > 100) ecology.value = 100; if(support.value > 100) support.value = 100;
+                    if(ecology.value <= 10) { funds.value -= 500; ecology.value = 20; addLog("⚠️ 环保处罚：扣除500资金！"); }
+                    addLog(log); month.value++; if(month.value > 12){ month.value = 1; year.value++; }
                 };
 
                 const upgradeChapter = (target) => {
-                    chapter.value = target;
-                    if(target === 2) {
-                        funds.value -= 1500;
-                        addLog("🎉【时代跨越】消耗1500资金，交通大动脉打通！全面融入合肥都市圈与长三角，开启转型之路！", "success");
-                    } else if (target === 3) {
-                        funds.value -= 6000;
-                        addLog("🎉【时代跨越】消耗6000资金，核心技术突破！实现了从“挖煤卖煤”到“绿电入沪”的华丽转身！", "success");
-                    }
-                    advanceTime();
+                    chapter.value = target; funds.value -= (target === 2 ? 1500 : 6000);
+                    addLog(`🎉 跨入${chapterNames[target]}！`);
                 };
 
-                const winGame = () => {
-                    addLog("🏆【游戏通关】历经多年的艰难转型，淮南市成功实现了绿色蝶变！昔日煤城如今成为了长三角的绿色能源基地与科技创新副中心！", "success");
-                    setTimeout(() => {
-                        alert(`恭喜通关！您总共花费了 ${year.value - 2010} 年零 ${month.value - 1} 个月完成蝶变！`);
-                    }, 500);
-                };
+                const winGame = () => { alert("恭喜通关！淮南已实现绿色蝶变！"); };
 
-                addLog("🕹️ 游戏开始。请开始您的执政生涯！", "success");
-
-                return {
-                    showRules, chapter, year, month, turns, chapterName,
-                    funds, ecology, support, tech, logs,
-                    doAction, upgradeChapter, winGame
-                };
+                return { showRules, chapter, year, month, chapterName, funds, ecology, support, tech, logs, doAction, upgradeChapter, winGame };
             }
         }).mount('#app');
     </script>
